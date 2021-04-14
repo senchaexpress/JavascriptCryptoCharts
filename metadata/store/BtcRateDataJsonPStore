@@ -1,0 +1,245 @@
+{
+    "type": "jsonpstore",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "alternateClassName": [
+            "btcratedatastore"
+        ],
+        "designer|userAlias": "BtcRateDataStore",
+        "designer|userClassName": "BtcRateDataJsonPStore",
+        "model": "HomeModel",
+        "storeId": "BtcRateDataJsonPStore"
+    },
+    "configAlternates": {
+        "alternateClassName": "typedarray",
+        "designer|userAlias": "string",
+        "designer|userClassName": "string",
+        "model": "model",
+        "storeId": "string",
+        "data": "array"
+    },
+    "name": "MyJsonPStore",
+    "designerId": "0952d027-fcb2-4b3d-a354-40ff5286d750",
+    "cn": [
+        {
+            "type": "Ext.data.proxy.JsonP",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "extraParams": [
+                    "{\"access_key\": \"94ba88431b0310b32ddc1af867f90a57\",\"start_date\": \"2020-01-01\", \"end_date\": \"2020-12-31\", \"target\": \"USD\", \"symbols\": \"BTC\", \"expand\": 1}"
+                ],
+                "url": "https://api.coinlayer.com/timeframe"
+            },
+            "configAlternates": {
+                "url": "string",
+                "extraParams": "object"
+            },
+            "name": "MyJsonPProxy",
+            "designerId": "dd34c892-9157-42e5-b5c6-a4a763380374",
+            "cn": [
+                {
+                    "type": "Ext.data.reader.Json",
+                    "reference": {
+                        "name": "reader",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "configAlternates": {
+                        "record": "binding"
+                    },
+                    "name": "MyJsonReader1",
+                    "designerId": "fc539154-d116-4c0f-9f20-1dff466ffcc6",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "data"
+                                ],
+                                "fn": "transform",
+                                "implHandler": [
+                                    "// console.log(\"response\", data);",
+                                    "var newData = [];",
+                                    "var rates = data.rates;",
+                                    "var dates = Object.keys(rates);",
+                                    "var firstDate = dates[0];",
+                                    "var nextOpen = rates[firstDate].BTC.rate || 0; // init",
+                                    "",
+                                    "// adjust for 07-21;",
+                                    "if(rates[\"2020-07-21\"]) {",
+                                    "    var tempRate = rates[\"2020-07-21\"];",
+                                    "    if(tempRate.BTC && tempRate.BTC.high > 100000) {",
+                                    "        tempRate.BTC.high = (tempRate.BTC.high) / 100;",
+                                    "    }",
+                                    "    console.log(\"tempRate\", tempRate);",
+                                    "    rates[\"2020-07-21\"] = tempRate;",
+                                    "}",
+                                    "",
+                                    "newData = dates.map((date) => {",
+                                    "    var btc = rates[date].BTC;",
+                                    "    btc.date = new Date(date).getTime();",
+                                    "    btc.close = nextOpen;",
+                                    "    nextOpen = btc.rate;",
+                                    "",
+                                    "    return btc;",
+                                    "});",
+                                    "// console.log(\"newData\", newData);",
+                                    "return newData;"
+                                ]
+                            },
+                            "configAlternates": {
+                                "designer|params": "typedarray",
+                                "fn": "string",
+                                "implHandler": "code"
+                            },
+                            "name": "transform",
+                            "designerId": "bf34c765-a3e3-43c5-a985-3e207f084025"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "rate"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber",
+            "designerId": "42f57aa7-ce93-4781-b2d4-f3cdf7fc8745"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "sup"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber1",
+            "designerId": "ab08a6fa-bbd4-465e-ae28-4e5ab740b6a6"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "high"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber2",
+            "designerId": "1c23c960-7bdb-40c0-8c9f-084c82ad3d63"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "low"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber3",
+            "designerId": "c9d403dc-f525-4f9b-8b6a-bb2c441bdaa7"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "vol"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber4",
+            "designerId": "6ce3e3f9-57fb-4442-a352-74caed766d28"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "cap"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber5",
+            "designerId": "971049c5-6d19-4352-88a5-4435f5e50d59"
+        },
+        {
+            "type": "Ext.data.field.Integer",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "date"
+            },
+            "configAlternates": {
+                "name": "string",
+                "dateFormat": "string"
+            },
+            "name": "MyInteger",
+            "designerId": "9a0c39d0-e3f8-44a9-9aea-8118b973fd1e"
+        },
+        {
+            "type": "Ext.data.field.Number",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "close"
+            },
+            "configAlternates": {
+                "name": "string"
+            },
+            "name": "MyNumber12",
+            "designerId": "69331a42-e463-4286-8959-6bd249d404b2"
+        }
+    ]
+}
